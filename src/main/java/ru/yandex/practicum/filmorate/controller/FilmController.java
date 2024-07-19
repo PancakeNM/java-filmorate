@@ -55,9 +55,11 @@ public class FilmController {
         }
         if (films.containsKey(newFilm.getId())) {
             Film oldFilm = films.get(newFilm.getId());
-            for (Film film: films.values()) {
-                if (film.getName().equals(newFilm.getName())) {
-                    throw new DuplicateDataException("Фильм с именем = " + newFilm.getName() + " уже существует");
+            if (!oldFilm.getName().equals(newFilm.getName())) {
+                for (Film film: films.values()) {
+                    if (film.getName().equals(newFilm.getName())) {
+                        throw new DuplicateDataException("Фильм с именем = " + newFilm.getName() + " уже существует");
+                    }
                 }
             }
             return filmUpdater(oldFilm, newFilm);
