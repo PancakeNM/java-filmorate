@@ -57,7 +57,7 @@ public class FilmController {
             Film oldFilm = films.get(newFilm.getId());
             for (Film film: films.values()) {
                 if (film.getName().equals(newFilm.getName())) {
-                    throw new DuplicateDataException("Фильм с данным именем уже существует");
+                    throw new DuplicateDataException("Фильм с именем = " + newFilm.getName() + " уже существует");
                 }
             }
             return filmUpdater(oldFilm, newFilm);
