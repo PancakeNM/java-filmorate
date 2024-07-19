@@ -12,7 +12,7 @@ import java.time.Instant;
 @Data
 @EqualsAndHashCode(of = "id")
 public class Film {
-    private int id;
+    private Long id;
     private String name;
     private String description;
     private Instant releaseDate;
