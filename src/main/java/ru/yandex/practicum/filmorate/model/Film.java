@@ -10,7 +10,7 @@ import java.time.Instant;
  * Film.
  */
 @Data
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "name")
 public class Film {
     private Long id;
     private String name;
