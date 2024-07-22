@@ -30,7 +30,7 @@ public class UserController {
 
     @PostMapping
     public User create(@RequestBody User newUser) {
-        if (newUser.getEmail() == null || newUser.getEmail().isBlank()) {
+        if (newUser.getEmail() == null) {
             log.warn("Email is empty");
             throw new ConditionsNotMetException("Имейл не должен быть пустым");
         } else if (!newUser.getEmail().contains("@")) {
