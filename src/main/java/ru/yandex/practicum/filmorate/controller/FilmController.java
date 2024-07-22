@@ -47,7 +47,7 @@ public class FilmController {
         for (Film film: films.values()) {
             if (film.getName().equals(newFilm.getName())) {
                 log.warn("Film with name {} is already exist", newFilm.getName());
-                throw new DuplicateDataException("Фильм с данным именем уже существует");
+                throw new DuplicateDataException("Фильм с именем " + newFilm.getName() + " уже существует");
             }
         }
         log.info("Generating new id");

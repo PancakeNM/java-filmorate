@@ -75,7 +75,7 @@ public class UserController {
                 for (User user : users.values()) {
                     if (user.getEmail().equals(newUser.getEmail())) {
                         log.warn("User with email {} is already exist", newUser.getEmail());
-                        throw new DuplicateDataException("Пльхователь с имейлом = " + newUser.getEmail() + " уже существует");
+                        throw new DuplicateDataException("Пользователь с имейлом = " + newUser.getEmail() + " уже существует");
                     }
                 }
             }
