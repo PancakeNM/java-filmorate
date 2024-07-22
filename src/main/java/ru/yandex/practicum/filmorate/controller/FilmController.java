@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +29,7 @@ public class FilmController {
     }
 
     @PostMapping
-    public Film create(@Valid @RequestBody Film newFilm) {
+    public Film create(@RequestBody Film newFilm) {
         log.info("Adding new film");
         if (newFilm.getName() == null || newFilm.getName().isBlank()) {
             log.warn("Film name is null or blank");
@@ -59,7 +58,7 @@ public class FilmController {
     }
 
     @PutMapping
-    public Film update(@Valid @RequestBody Film newFilm) {
+    public Film update(@RequestBody Film newFilm) {
         if (newFilm.getId() == null) {
             log.warn("Film id is not stated");
             throw new ConditionsNotMetException("Не указан id фильма");

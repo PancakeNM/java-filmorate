@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.model;
 
-import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,6 +12,5 @@ public class User {
     private String email;
     private String login;
     private String name;
-    @PastOrPresent(message = "День рождения не может быть в будущем")
     private LocalDate birthday;
 }
