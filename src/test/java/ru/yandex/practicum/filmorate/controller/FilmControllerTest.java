@@ -175,7 +175,7 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void createShouldReturnCreatedTask() {
+    public void createShouldReturnCreatedFilm() {
         Film expected = new Film();
         expected.setId(1L);
         expected.setName(film1.getName());
@@ -189,7 +189,7 @@ public class FilmControllerTest {
     }
 
     @Test
-    public void updateShouldReturnUpdatedTask() {
+    public void updateShouldReturnUpdatedFilm() {
         controller.create(film1);
         Film newFilm = new Film();
         newFilm.setId(1L);
