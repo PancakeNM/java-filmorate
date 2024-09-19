@@ -2,14 +2,8 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
-import ru.yandex.practicum.filmorate.exception.DuplicateDataException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
@@ -59,12 +53,6 @@ public class FilmController {
         } else if (newFilm.getDuration() < 0) {
             log.warn("Film duration value is negative");
             throw new ConditionsNotMetException("Продолжительность фильма должна быть положительным числом");
-        }
-        for (Film film: filmService.getAll()) {
-            if (film.getName().equals(newFilm.getName())) {
-                log.warn("Film with name {} is already exist", newFilm.getName());
-                throw new DuplicateDataException("Фильм с именем " + newFilm.getName() + " уже существует");
-            }
         }
     }
 
