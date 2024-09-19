@@ -67,4 +67,14 @@ public class FilmController {
             }
         }
     }
+
+    private void validate(Long filmId, Long userId) {
+        if (filmId == null) {
+            log.warn("filmId is null");
+            throw new ConditionsNotMetException("Не указан id фильма.");
+        } else if (userId == null) {
+            log.warn("userId is null");
+            throw new ConditionsNotMetException("Не указан id пользователя.");
+        }
+    }
 }

@@ -25,6 +25,12 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film save(Film newFilm) {
+        for (Film film: films.values()) {
+            if (film.getName().equals(newFilm.getName())) {
+                log.warn("Film with name {} is already exist", newFilm.getName());
+                throw new DuplicateDataException("Фильм с именем " + newFilm.getName() + " уже существует");
+            }
+        }
         log.info("Generating new id");
         newFilm.setId(generateNewId());
         films.put(newFilm.getId(), newFilm);
