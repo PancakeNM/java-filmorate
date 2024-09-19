@@ -56,6 +56,15 @@ public class InMemoryFilmStorage implements FilmStorage {
         return films.values();
     }
 
+    @Override
+    public Film getById(Long filmId) {
+        if (!films.containsKey(filmId)) {
+            log.warn("Film with id {} is not found", filmId);
+            throw new NotFoundException("Фильм с id = " + filmId + " не найден");
+        }
+        return films.get(filmId);
+    }
+
     private Film filmUpdater(Film oldFilm, Film newFilm) {
         log.debug("Film update started");
         if (newFilm.getName() != null) {
