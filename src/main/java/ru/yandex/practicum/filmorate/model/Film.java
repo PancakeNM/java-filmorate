@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -24,6 +25,9 @@ public class Film {
     }
 
     public void removeLike(Long userId) {
+        if (!likes.contains(userId)) {
+            throw new NotFoundException("Пользователь с id " + userId + " еще не ставил лайк.");
+        }
         likes.remove(userId);
     }
 }
