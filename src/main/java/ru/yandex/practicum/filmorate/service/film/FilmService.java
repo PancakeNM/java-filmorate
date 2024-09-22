@@ -44,4 +44,12 @@ public class FilmService {
         return filmStorage.getById(filmId);
     }
 
+    public List<Film> getMostPopular(Integer count) {
+        log.info("generating list of popular films.");
+        return getAll().stream()
+                .sorted(Comparator.comparing(Film::getLikesCount).reversed())
+                .limit(count)
+                .collect(Collectors.toList());
+    }
+
 }
