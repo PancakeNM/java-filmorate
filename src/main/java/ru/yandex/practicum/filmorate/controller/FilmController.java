@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -38,6 +39,27 @@ public class FilmController {
             throw new ConditionsNotMetException("Не указан id фильма");
         }
         return filmService.update(newFilm);
+    }
+
+    @PutMapping("/{film_id}/like/{id}")
+    public Film addLike(@PathVariable Long film_id, @PathVariable Long id){
+        validate(film_id, id);
+        return filmService.addLike(film_id, id);
+    }
+
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public void removeLike(@PathVariable Long filmId, @PathVariable Long userId){
+        validate(filmId, userId);
+        filmService.removeLike(filmId, userId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getMostPopular(@RequestParam(name = "count", defaultValue = "10") int count) {
+        if (count < 0) {
+            log.warn("count is negative");
+            throw new ConditionsNotMetException("Кол-во не может быть отрицательным");
+        }
+        return filmService.getMostPopular(count);
     }
 
     private void validate(Film newFilm) {
