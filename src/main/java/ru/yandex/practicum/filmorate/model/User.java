@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -23,9 +22,6 @@ public class User {
     }
 
     public void removeFriend(Long id) {
-        if (!friends.contains(id)) {
-            throw new NotFoundException("Пользователь с id " + id + " не является другом.");
-        }
         friends.remove(id);
     }
 }
