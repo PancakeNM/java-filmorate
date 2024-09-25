@@ -37,7 +37,6 @@ public class FilmService {
 
     public void removeLike(Long filmId, Long userId) {
         getFilmById(filmId).removeLike(userId);
-        getFilmById(filmId);
     }
 
     public Film getFilmById(Long filmId) {
