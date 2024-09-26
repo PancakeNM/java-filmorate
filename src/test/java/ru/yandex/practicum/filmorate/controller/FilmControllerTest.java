@@ -7,6 +7,11 @@ import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.DuplicateDataException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.film.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,12 +21,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FilmControllerTest {
     FilmController controller;
+    FilmService service;
+    FilmStorage filmStorage;
+    UserStorage userStorage;
     Film film1;
     Film film2;
 
     @BeforeEach
     public void beforeEach() {
-        controller = new FilmController();
+        filmStorage = new InMemoryFilmStorage();
+        userStorage = new InMemoryUserStorage();
+        service = new FilmService(filmStorage, userStorage);
+        controller = new FilmController(service);
         film1 = new Film();
         film1.setName("TestName1");
         film1.setDescription("TestDescription1");
