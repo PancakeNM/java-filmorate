@@ -7,6 +7,9 @@ import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exception.DuplicateDataException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.user.UserService;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,12 +19,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserControllerTest {
     UserController controller;
+    UserService service;
+    UserStorage storage;
     User user1;
     User user2;
 
     @BeforeEach
     public void beforeEach() {
-        controller = new UserController();
+        storage = new InMemoryUserStorage();
+        service = new UserService(storage);
+        controller = new UserController(service);
         user1 = new User();
         user1.setName("TestName1");
         user1.setLogin("TestLogin1");
