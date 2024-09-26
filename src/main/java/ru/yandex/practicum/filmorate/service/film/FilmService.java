@@ -29,7 +29,7 @@ public class FilmService {
         return filmStorage.update(film);
     }
 
-    public Collection<Film> getAll () {
+    public Collection<Film> getAll() {
         return filmStorage.getAll();
     }
 
