@@ -18,6 +18,7 @@ import java.util.List;
 public class FilmController {
 
     private final FilmService filmService;
+    private final String likePath = "/{film-id}/like/{user-id}";
 
 
     @GetMapping
@@ -41,14 +42,14 @@ public class FilmController {
         return filmService.update(newFilm);
     }
 
-    @PutMapping("/{filmId}/like/{id}")
-    public Film addLike(@PathVariable Long filmId, @PathVariable Long id) {
+    @PutMapping(likePath)
+    public Film addLike(@PathVariable(name = "film-id") Long filmId, @PathVariable("user-id") Long id) {
         validate(filmId, id);
         return filmService.addLike(filmId, id);
     }
 
-    @DeleteMapping("/{filmId}/like/{userId}")
-    public void removeLike(@PathVariable Long filmId, @PathVariable Long userId) {
+    @DeleteMapping(likePath)
+    public void removeLike(@PathVariable(name = "film-id") Long filmId, @PathVariable(name = "user-id") Long userId) {
         validate(filmId, userId);
         filmService.removeLike(filmId, userId);
     }

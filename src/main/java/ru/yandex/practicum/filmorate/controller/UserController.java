@@ -17,6 +17,7 @@ import java.util.List;
 @Slf4j
 public class UserController {
     private final UserService service;
+    private final String friendsPath = "/{id}/friends";
 
     @GetMapping
     public Collection<User> getAll() {
@@ -38,26 +39,26 @@ public class UserController {
         return service.update(newUser);
     }
 
-    @PutMapping("/{id}/friends/{friendId}")
-    public User addFriend(@PathVariable Long id, @PathVariable Long friendId) {
+    @PutMapping(friendsPath + "/{friend-id}")
+    public User addFriend(@PathVariable Long id, @PathVariable(name = "friend-id") Long friendId) {
         validate(id, friendId);
         return service.addFriend(id, friendId);
     }
 
-    @DeleteMapping("/{id}/friends/{friendId}")
-    public void removeFriend(@PathVariable Long id, @PathVariable Long friendId) {
+    @DeleteMapping(friendsPath + "/{friend-id}")
+    public void removeFriend(@PathVariable Long id, @PathVariable(name = "friend-id") Long friendId) {
         validate(id, friendId);
         service.removeFriend(id, friendId);
     }
 
-    @GetMapping("/{id}/friends")
+    @GetMapping(friendsPath)
     public List<User> getFriends(@PathVariable Long id) {
         validate(id);
         return service.getFriends(id);
     }
 
-    @GetMapping("/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable Long id, @PathVariable Long otherId) {
+    @GetMapping(friendsPath + "/common/{other-id}")
+    public List<User> getCommonFriends(@PathVariable Long id, @PathVariable(name = "other-id") Long otherId) {
         validate(id, otherId);
         return service.getCommonFriends(id, otherId);
     }
