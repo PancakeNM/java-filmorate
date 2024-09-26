@@ -6,7 +6,9 @@ import ru.yandex.practicum.filmorate.exception.DuplicateDataException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -28,7 +30,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         for (Film film: films.values()) {
             if (film.getName().equals(newFilm.getName())) {
                 log.warn("Film with name {} is already exist", newFilm.getName());
-                throw new DuplicateDataException("Фильм с именем " + newFilm.getName() + " уже существует");
+                throw new DuplicateDataException(String.format("Фильм с именем %s уже существует", newFilm.getName()));
             }
         }
         log.info("Generating new id");
@@ -46,7 +48,8 @@ public class InMemoryFilmStorage implements FilmStorage {
                 for (Film film: films.values()) {
                     if (film.getName().equals(newFilm.getName())) {
                         log.warn("Film with name {} is already exist", newFilm.getName());
-                        throw new DuplicateDataException("Фильм с именем = " + newFilm.getName() + " уже существует");
+                        throw new DuplicateDataException(String.format("Фильм с именем = %s уже существует",
+                                newFilm.getName()));
                     }
                 }
             }
@@ -54,7 +57,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             return filmUpdater(oldFilm, newFilm);
         }
         log.warn("Film with id {} is not found", newFilm.getId());
-        throw new NotFoundException("Фильм с id = " + newFilm.getId() + " не найден");
+        throw new NotFoundException(String.format("Фильм с id = %s не найден", newFilm.getId()));
     }
 
     @Override
@@ -66,7 +69,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public Film getById(Long filmId) {
         if (!films.containsKey(filmId)) {
             log.warn("Film with id {} is not found", filmId);
-            throw new NotFoundException("Фильм с id = " + filmId + " не найден");
+            throw new NotFoundException(String.format("Фильм с id = %s не найден", filmId));
         }
         return films.get(filmId);
     }

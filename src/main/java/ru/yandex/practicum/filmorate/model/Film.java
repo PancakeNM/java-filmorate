@@ -27,7 +27,7 @@ public class Film {
 
     public void removeLike(Long userId) {
         if (!likes.contains(userId)) {
-            throw new NotFoundException("Пользователь с id " + userId + " еще не ставил лайк.");
+            throw new NotFoundException(String.format("Пользователь с id %s еще не ставил лайк.", userId));
         }
         likes.remove(userId);
     }

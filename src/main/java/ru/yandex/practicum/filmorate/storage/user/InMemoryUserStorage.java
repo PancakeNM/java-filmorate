@@ -26,7 +26,8 @@ public class InMemoryUserStorage implements UserStorage {
         for (User user: users.values()) {
             if (user.getEmail().equals(newUser.getEmail())) {
                 log.warn("User with email {} already exists", newUser.getEmail());
-                throw new DuplicateDataException("Пользователь с имейлом " + newUser.getEmail() + " уже существует");
+                throw new DuplicateDataException(String.format("Пользователь с имейлом %s уже существует",
+                        newUser.getEmail()));
             }
         }
         if (newUser.getName() == null || newUser.getName().isBlank()) {
@@ -48,7 +49,8 @@ public class InMemoryUserStorage implements UserStorage {
                 for (User user : users.values()) {
                     if (user.getEmail().equals(newUser.getEmail())) {
                         log.warn("User with email {} is already exist", newUser.getEmail());
-                        throw new DuplicateDataException("Пользователь с имейлом = " + newUser.getEmail() + " уже существует");
+                        throw new DuplicateDataException(String.format("Пользователь с имейлом = %s уже существует",
+                                newUser.getEmail()));
                     }
                 }
             }
@@ -56,7 +58,7 @@ public class InMemoryUserStorage implements UserStorage {
             return userUpdater(oldUser, newUser);
         }
         log.warn("User with id {} not found", newUser.getId());
-        throw new NotFoundException("Пользователь с id = " + newUser.getId() + " не найден");
+        throw new NotFoundException(String.format("Пользователь с id = %s не найден", newUser.getId()));
     }
 
     @Override
@@ -65,7 +67,7 @@ public class InMemoryUserStorage implements UserStorage {
             return users.get(userId);
         }
         log.warn("User with id {} not found", userId);
-        throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+        throw new NotFoundException(String.format("Пользователь с id = %s не найден", userId));
     }
 
     private User userUpdater(User oldUser, User newUser) {
