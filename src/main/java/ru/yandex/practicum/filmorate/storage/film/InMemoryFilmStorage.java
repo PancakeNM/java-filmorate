@@ -1,17 +1,18 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.DuplicateDataException;
 import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
+@Primary
 public class InMemoryFilmStorage implements FilmStorage {
 
     private final Map<Long, Film> films = new HashMap<>();
@@ -72,6 +73,26 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new NotFoundException(String.format("Фильм с id = %s не найден", filmId));
         }
         return films.get(filmId);
+    }
+    
+    @Override
+    public Film addLike(Long filmId, Long userId) {
+        getById(filmId).addLike(userId);
+        return getById(filmId);
+    }
+    
+    @Override
+    public void removeLike(Long filmId, Long userId) {
+        getById(filmId).removeLike(userId);
+    }
+    
+    @Override
+    public List<Film> getMostPopular(Integer count) {
+        log.info("generating list of popular films.");
+        return getAll().stream()
+                .sorted(Comparator.comparing(Film::getLikesCount).reversed())
+                .limit(count)
+                .collect(Collectors.toList());
     }
 
     private Film filmUpdater(Film oldFilm, Film newFilm) {

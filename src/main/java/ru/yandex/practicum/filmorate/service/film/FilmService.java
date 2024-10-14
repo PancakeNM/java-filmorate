@@ -9,9 +9,7 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,15 +35,14 @@ public class FilmService {
         if (userStorage.getById(userId) == null) {
             throw new NotFoundException("Пользователь с id " + userId + " не найден.");
         }
-        getFilmById(filmId).addLike(userId);
-        return getFilmById(filmId);
+        return filmStorage.addLike(filmId, userId);
     }
 
     public void removeLike(Long filmId, Long userId) {
         if (userStorage.getById(userId) == null) {
             throw new NotFoundException("Пользователь с id " + userId + " не найден.");
         }
-        getFilmById(filmId).removeLike(userId);
+        filmStorage.removeLike(filmId, userId);
     }
 
     public Film getFilmById(Long filmId) {
@@ -53,11 +50,7 @@ public class FilmService {
     }
 
     public List<Film> getMostPopular(Integer count) {
-        log.info("generating list of popular films.");
-        return getAll().stream()
-                .sorted(Comparator.comparing(Film::getLikesCount).reversed())
-                .limit(count)
-                .collect(Collectors.toList());
+        return filmStorage.getMostPopular(count);
     }
 
 }
