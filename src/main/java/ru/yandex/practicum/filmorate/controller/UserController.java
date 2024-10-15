@@ -2,12 +2,20 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,9 +48,9 @@ public class UserController {
     }
 
     @PutMapping(friendsPath + "/{friend-id}")
-    public User addFriend(@PathVariable Long id, @PathVariable(name = "friend-id") Long friendId) {
+    public void addFriend(@PathVariable Long id, @PathVariable(name = "friend-id") Long friendId) {
         validate(id, friendId);
-        return service.addFriend(id, friendId);
+        service.addFriend(id, friendId);
     }
 
     @DeleteMapping(friendsPath + "/{friend-id}")
@@ -54,13 +62,13 @@ public class UserController {
     @GetMapping(friendsPath)
     public List<User> getFriends(@PathVariable Long id) {
         validate(id);
-        return service.getFriends(id);
+        return new ArrayList<>(service.getFriends(id));
     }
 
     @GetMapping(friendsPath + "/common/{other-id}")
     public List<User> getCommonFriends(@PathVariable Long id, @PathVariable(name = "other-id") Long otherId) {
         validate(id, otherId);
-        return service.getCommonFriends(id, otherId);
+        return new ArrayList<>(service.getCommonFriends(id, otherId));
     }
 
     private void validate(User user) {
