@@ -3,14 +3,12 @@ package ru.yandex.practicum.filmorate.service.film;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,12 +45,7 @@ public class FilmService {
     }
 
     public Film getFilmById(Long filmId) {
-        Optional<Film> optionalFilm = filmStorage.getById(filmId);
-        if (optionalFilm.isEmpty()) {
-            throw new NotFoundException(String.format("Фильм с id %s не найден", filmId));
-        } else {
-            return optionalFilm.get();
-        }
+        return filmStorage.getById(filmId);
     }
 
     public List<Film> getMostPopular(Integer count) {

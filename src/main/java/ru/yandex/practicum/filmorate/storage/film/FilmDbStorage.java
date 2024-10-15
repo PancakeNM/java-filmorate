@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dal.BaseRepository;
+import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Like;
@@ -79,8 +80,13 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
     }
 
     @Override
-    public Optional<Film> getById(Long filmId) {
-        return findOne(FIND_ALL_QUERY.concat(" WHERE f.id = ?"), filmId);
+    public Film getById(Long filmId) {
+        Optional<Film> optionalFilm = findOne(FIND_ALL_QUERY.concat(" WHERE f.id = ?"), filmId);
+        if (optionalFilm.isEmpty()) {
+            throw new NotFoundException("Фильм под id=%s не найден");
+        } else {
+            return addFields(optionalFilm.get());
+        }
     }
 
     @Override

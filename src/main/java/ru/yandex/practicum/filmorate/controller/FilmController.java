@@ -36,6 +36,11 @@ public class FilmController {
         return filmService.getAll();
     }
 
+    @GetMapping({"/{film-id}"})
+    public Film getFilmById(@PathVariable(name = "film-id") Long id) {
+        return filmService.getFilmById(id);
+    }
+
     @PostMapping
     public Film create(@RequestBody Film newFilm) {
         log.info("Adding new film");
