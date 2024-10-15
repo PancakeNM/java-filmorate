@@ -59,7 +59,14 @@ public class FilmDbStorage extends BaseRepository<Film> implements FilmStorage {
 
     @Override
     public Film updateFilm(Film film) {
-
+        update(
+                UPDATE_QUERY,
+                film.getName(),
+                film.getDescription(),
+                film.getReleaseDate(),
+                film.getDuration(),
+                film.getMpa().getId()
+        );
         return addFields(film);
     }
 
