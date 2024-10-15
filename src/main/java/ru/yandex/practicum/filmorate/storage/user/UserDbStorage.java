@@ -16,16 +16,16 @@ import java.util.Optional;
 public class UserDbStorage extends BaseRepository<User> implements UserStorage {
 
     private static final String USER_QUERY = "SELECT * FROM users";
-    private static final String CREATE_QUERY = "INSERT INTO users (name, login, birthday, email) values " +
-                                                "(?, ?, ?, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE users SET name = ?, login = ?, birthday = ?, email = ? " +
+    private static final String CREATE_QUERY = "INSERT INTO users (name, login, email, birthday) values " +
+                                                "(?, ?, ?, ?)";
+    private static final String UPDATE_QUERY = "UPDATE users SET name = ?, login = ?, email = ?, birthday = ? " +
                                                 "WHERE id = ?";
     private static final String FIND_COMMON_FRIENDS_QUERY = "SELECT * FROM users WHERE id IN " +
             "(SELECT followed_user_id FROM users u JOIN follows fl ON u.id = fl.following_user_id WHERE u.id = ?) " +
             "AND id IN (SELECT followed_user_id FROM users u JOIN follows fl ON " +
             "u.id = fl.following_user_id WHERE u.id = ?)";
     private static final String FIND_USER_FRIENDS_QUERY = "SELECT * FROM users WHERE id IN " +
-            "(SELECT fl.followed_user_id FROM users u JOIN follows fl ON u.id = fl.following_user_id WHERE u.id = ?";
+            "(SELECT fl.followed_user_id FROM users u JOIN follows fl ON u.id = fl.following_user_id WHERE u.id = ?)";
 
     public UserDbStorage(JdbcTemplate jdbc, RowMapper<User> mapper) {
         super(jdbc, mapper);
@@ -40,9 +40,9 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
     public User create(User newUser) {
         Long id = insert(
                 CREATE_QUERY,
-                newUser.getEmail(),
                 newUser.getLogin(),
                 newUser.getName(),
+                newUser.getEmail(),
                 newUser.getBirthday()
         );
         newUser.setId(id);
@@ -51,19 +51,21 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
 
     @Override
     public User update(User newUser) {
+        getById(newUser.getId()); //Проверка на наличее юзера в бд
         update(
                 UPDATE_QUERY,
-                newUser.getLogin(),
-                newUser.getLogin(),
                 newUser.getName(),
-                newUser.getBirthday()
+                newUser.getLogin(),
+                newUser.getEmail(),
+                newUser.getBirthday(),
+                newUser.getId()
         );
         return newUser;
     }
 
     @Override
     public User getById(Long userId) {
-        Optional<User> optionalUser = findOne(USER_QUERY.concat("WHERE id = ?"), userId);
+        Optional<User> optionalUser = findOne(USER_QUERY.concat(" WHERE id = ?"), userId);
         if (optionalUser.isEmpty()) {
             throw new NotFoundException(String.format("Пользователь с id = %s не найден", userId));
         } else {
@@ -85,6 +87,7 @@ public class UserDbStorage extends BaseRepository<User> implements UserStorage {
 
     @Override
     public Collection<User> getFriends(Long id) {
+        getById(id);
         return findMany(FIND_USER_FRIENDS_QUERY, id);
     }
 

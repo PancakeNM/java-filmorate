@@ -38,11 +38,11 @@ public class UserService {
     }
 
     public void addFriend(Long userId, Long friendId) {
-        followStorage.addFriend(userId, friendId);
+        followStorage.addFriend(userId, getUserById(friendId).getId());
     }
 
-    public void removeFriend(Long userId, Long friendId) {
-        followStorage.deleteFriend(userId, friendId);
+    public void removeFriend(User user, User friend) {
+        followStorage.deleteFriend(user.getId(), friend.getId());
     }
 
     public Collection<User> getFriends(Long id) {

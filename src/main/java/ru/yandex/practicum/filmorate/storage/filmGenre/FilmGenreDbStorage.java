@@ -38,7 +38,7 @@ public class FilmGenreDbStorage implements FilmGenreStorage {
 
     @Override
     public Collection<Genre> getAllFilmGenresByFilmId(Long filmId) {
-        final String getAllByIdQuery = "SELECT g.id AS id FROM film_genre AS fg LEFT JOIN genres g ON " +
+        final String getAllByIdQuery = "SELECT g.id AS id, name FROM film_genre AS fg LEFT JOIN genres g ON " +
                 "fg.genre_id = g.id WHERE film_id = ?";
 
         return jdbc.query(getAllByIdQuery, new GenreRowMapper(), filmId);
@@ -56,8 +56,8 @@ public class FilmGenreDbStorage implements FilmGenreStorage {
 
     @Override
     public Map<Long, Collection<Genre>> getAllFilmGenres(Collection<Film> films) {
-        final String getAllQuery = "SELECT fg.film_id, g.id, AS genre_id, g.name AS name FROM film_genre fg " +
-                "LEFT JOIN genre g ON fg.genre_id = g.id WHERE fg.film_id IN (%s)";
+        final String getAllQuery = "SELECT fg.film_id, g.id AS genre_id, g.name AS name FROM film_genre fg " +
+                "LEFT JOIN genres g ON fg.genre_id = g.id WHERE fg.film_id IN (%s)";
 
         Map<Long, Collection<Genre>> filmGenreMap = new HashMap<>();
         Collection<String> ids = films.stream()

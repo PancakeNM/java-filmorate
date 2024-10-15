@@ -9,3 +9,22 @@ spring:
     driverClassName: org.h2.Driver
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+logging:
+  level:
+    ru:
+      yandex:
+        practicum: ERROR
+    org:
+      zalando:
+        logbook: INFO
+      springframework:
+        jdbc:
+          core: ERROR
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force-response: true

@@ -20,4 +20,5 @@ public class FilmDto {
     private Integer duration;
     private Collection<Genre> genres;
     private Mpa mpa;
+    private int rate;
 }

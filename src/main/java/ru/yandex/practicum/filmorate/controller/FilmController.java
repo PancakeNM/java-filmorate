@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.controller.mapper.FilmMapper;
-import ru.yandex.practicum.filmorate.dto.film.CreateFilmDto;
-import ru.yandex.practicum.filmorate.dto.film.FilmDto;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
@@ -39,45 +37,39 @@ public class FilmController {
     }
 
     @PostMapping
-    public FilmDto create(@RequestBody CreateFilmDto filmDto) {
+    public Film create(@RequestBody Film newFilm) {
         log.info("Adding new film");
-        Film newFilm = mapper.map(filmDto);
         validate(newFilm);
-        Film createdFilm = filmService.save(newFilm);
-        return mapper.map(createdFilm);
+        return filmService.save(newFilm);
     }
 
     @PutMapping
-    public FilmDto update(@RequestBody FilmDto filmDto) {
-        Film newFilm = mapper.map(filmDto);
+    public Film update(@RequestBody Film newFilm) {
         if (newFilm.getId() == null) {
             log.warn("Film id is not stated");
             throw new ConditionsNotMetException("Не указан id фильма");
         }
-        Film updatedFilm = filmService.update(newFilm);
-        return mapper.map(updatedFilm);
+        return filmService.update(newFilm);
     }
 
     @PutMapping(likePath)
-    public FilmDto addLike(@PathVariable(name = "film-id") Long filmId, @PathVariable("user-id") Long id) {
+    public Film addLike(@PathVariable(name = "film-id") Long filmId, @PathVariable("user-id") Long id) {
         validate(filmId, id);
         filmService.addLike(filmId, id);
-        return mapper.map(filmService.getFilmById(filmId));
+        return filmService.getFilmById(filmId);
     }
 
     @DeleteMapping(likePath)
-    public FilmDto removeLike(@PathVariable(name = "film-id") Long filmId, @PathVariable(name = "user-id")
+    public Film removeLike(@PathVariable(name = "film-id") Long filmId, @PathVariable(name = "user-id")
                                 Long userId) {
         validate(filmId, userId);
         filmService.removeLike(filmId, userId);
-        return mapper.map(filmService.getFilmById(filmId));
+        return filmService.getFilmById(filmId);
     }
 
     @GetMapping("/popular")
-    public List<FilmDto> getMostPopular(@RequestParam(name = "count", defaultValue = "10") int count) {
-        return filmService.getMostPopular(count).stream()
-                .map(mapper::map)
-                .toList();
+    public List<Film> getMostPopular(@RequestParam(name = "count", defaultValue = "10") int count) {
+        return filmService.getMostPopular(count);
     }
 
     private void validate(Film newFilm) {

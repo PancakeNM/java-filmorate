@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller.mapper;
 
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.dto.film.CreateFilmDto;
 import ru.yandex.practicum.filmorate.dto.film.FilmDto;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -17,17 +16,7 @@ public class FilmMapper {
                 .duration(dto.getDuration())
                 .genres(dto.getGenres())
                 .mpa(dto.getMpa())
-                .build();
-    }
-
-    public Film map(CreateFilmDto dto) {
-        return Film.builder()
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .releaseDate(dto.getReleaseDate())
-                .duration(dto.getDuration())
-                .genres(dto.getGenres())
-                .mpa(dto.getMpa())
+                .rate(dto.getRate())
                 .build();
     }
 
@@ -40,6 +29,7 @@ public class FilmMapper {
                 .mpa(film.getMpa())
                 .name(film.getName())
                 .releaseDate(film.getReleaseDate())
+                .rate(film.getRate())
                 .build();
     }
 }
