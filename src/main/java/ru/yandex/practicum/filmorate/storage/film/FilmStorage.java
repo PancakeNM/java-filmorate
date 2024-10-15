@@ -4,14 +4,15 @@ import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface FilmStorage {
 
     Film save(Film film);
 
-    Film update(Film film);
+    Film updateFilm(Film film);
 
-    Film getById(Long filmId);
+    Optional<Film> getById(Long filmId);
 
     Collection<Film> getAll();
 

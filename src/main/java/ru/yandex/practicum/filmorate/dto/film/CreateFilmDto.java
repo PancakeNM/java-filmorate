@@ -1,27 +1,24 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.dto.film;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
-/**
- * Film.
- */
 @Data
-@EqualsAndHashCode(of = "name")
-@Builder(toBuilder = true)
-public class Film {
-    private Long id;
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreateFilmDto {
     private String name;
     private String description;
     private LocalDate releaseDate;
     private Integer duration;
-    private Set<Long> likes = new HashSet<>();
     private Collection<Genre> genres;
     private Mpa mpa;
 }
