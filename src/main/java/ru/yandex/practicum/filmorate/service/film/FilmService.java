@@ -48,7 +48,7 @@ public class FilmService {
 
     public Film getFilmById(Long filmId) {
         Optional<Film> optionalFilm = filmStorage.getById(filmId);
-        if(optionalFilm.isEmpty()) {
+        if (optionalFilm.isEmpty()) {
             throw new NotFoundException(String.format("Фильм с id %s не найден", filmId));
         } else {
             return optionalFilm.get();
