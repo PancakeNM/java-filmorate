@@ -2,7 +2,15 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.exception.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
@@ -26,6 +34,11 @@ public class FilmController {
         return filmService.getAll();
     }
 
+    @GetMapping({"/{film-id}"})
+    public Film getFilmById(@PathVariable(name = "film-id") Long id) {
+        return filmService.getFilmById(id);
+    }
+
     @PostMapping
     public Film create(@RequestBody Film newFilm) {
         log.info("Adding new film");
@@ -45,21 +58,20 @@ public class FilmController {
     @PutMapping(likePath)
     public Film addLike(@PathVariable(name = "film-id") Long filmId, @PathVariable("user-id") Long id) {
         validate(filmId, id);
-        return filmService.addLike(filmId, id);
+        filmService.addLike(filmId, id);
+        return filmService.getFilmById(filmId);
     }
 
     @DeleteMapping(likePath)
-    public void removeLike(@PathVariable(name = "film-id") Long filmId, @PathVariable(name = "user-id") Long userId) {
+    public Film removeLike(@PathVariable(name = "film-id") Long filmId, @PathVariable(name = "user-id")
+                                Long userId) {
         validate(filmId, userId);
         filmService.removeLike(filmId, userId);
+        return filmService.getFilmById(filmId);
     }
 
     @GetMapping("/popular")
     public List<Film> getMostPopular(@RequestParam(name = "count", defaultValue = "10") int count) {
-        if (count < 0) {
-            log.warn("count is negative");
-            throw new ConditionsNotMetException("Кол-во не может быть отрицательным");
-        }
         return filmService.getMostPopular(count);
     }
 

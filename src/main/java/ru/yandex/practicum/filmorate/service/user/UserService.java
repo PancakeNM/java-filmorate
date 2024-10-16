@@ -4,11 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.follow.FollowStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,12 +15,17 @@ import java.util.List;
 public class UserService {
 
     private final UserStorage userStorage;
+    private final FollowStorage followStorage;
+
 
     public Collection<User> getAll() {
         return userStorage.getAll();
     }
 
     public User create(User newUser) {
+        if (newUser.getName().isEmpty()) {
+            newUser.setName(newUser.getLogin());
+        }
         return userStorage.create(newUser);
     }
 
@@ -33,35 +37,19 @@ public class UserService {
         return userStorage.getById(id);
     }
 
-    public User addFriend(Long userId, Long friendId) {
-        getUserById(userId).addFriend(friendId);
-        getUserById(friendId).addFriend(userId);
-        return getUserById(userId);
+    public void addFriend(Long userId, Long friendId) {
+        followStorage.addFriend(userId, getUserById(friendId).getId());
     }
 
-    public void removeFriend(Long userId, Long friendId) {
-        getUserById(userId).removeFriend(friendId);
-        getUserById(friendId).removeFriend(userId);
+    public void removeFriend(User user, User friend) {
+        followStorage.deleteFriend(user.getId(), friend.getId());
     }
 
-    public List<User> getFriends(Long id) {
-        User user = getUserById(id);
-        return user.getFriends().stream()
-                .map(this::getUserById)
-                .toList();
+    public Collection<User> getFriends(Long id) {
+        return userStorage.getFriends(id);
     }
 
-    public List<User> getCommonFriends(Long userId, Long otherId) {
-        User user = getUserById(userId);
-        User other = getUserById(otherId);
-        List<User> userFriends = user.getFriends().stream()
-                .map(this::getUserById)
-                .toList();
-        List<User> otherFriends = other.getFriends().stream()
-                .map(this::getUserById)
-                .toList();
-        List<User> common = new ArrayList<>(userFriends);
-        common.retainAll(otherFriends);
-        return common;
+    public Collection<User> getCommonFriends(Long userId, Long otherId) {
+        return userStorage.getCommonFriends(userId, otherId);
     }
 }
