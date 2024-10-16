@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -13,14 +15,15 @@ import java.util.Collection;
 @Data
 @EqualsAndHashCode(of = "name")
 @Builder(toBuilder = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Film {
-    private Long id;
-    private String name;
-    private String description;
-    private LocalDate releaseDate;
-    private Integer duration;
-    private Collection<Like> likes;
-    private Collection<Genre> genres;
-    private Mpa mpa;
-    private int rate;
+    Long id;
+    String name;
+    String description;
+    LocalDate releaseDate;
+    Integer duration;
+    Collection<Like> likes;
+    Collection<Genre> genres;
+    Mpa mpa;
+    int rate;
 }
