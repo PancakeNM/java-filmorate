@@ -1,51 +1,47 @@
 package ru.yandex.practicum.filmorate.service.film;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exception.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.like.LikeStorage;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class FilmService {
 
     private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
+    private final LikeStorage likeStorage;
+
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage,
+                       @Qualifier("likeDbStorage") LikeStorage likeStorage) {
+        this.filmStorage = filmStorage;
+        this.likeStorage = likeStorage;
+    }
 
     public Film save(Film film) {
         return filmStorage.save(film);
     }
 
     public Film update(Film film) {
-        return filmStorage.update(film);
+        return filmStorage.updateFilm(film);
     }
 
     public Collection<Film> getAll() {
         return filmStorage.getAll();
     }
 
-    public Film addLike(Long filmId, Long userId) {
-        if (userStorage.getById(userId) == null) {
-            throw new NotFoundException("Пользователь с id " + userId + " не найден.");
-        }
-        getFilmById(filmId).addLike(userId);
-        return getFilmById(filmId);
+    public void addLike(Long filmId, Long userId) {
+        likeStorage.addLike(filmId, userId);
     }
 
     public void removeLike(Long filmId, Long userId) {
-        if (userStorage.getById(userId) == null) {
-            throw new NotFoundException("Пользователь с id " + userId + " не найден.");
-        }
-        getFilmById(filmId).removeLike(userId);
+        likeStorage.removeLike(filmId, userId);
     }
 
     public Film getFilmById(Long filmId) {
@@ -53,9 +49,10 @@ public class FilmService {
     }
 
     public List<Film> getMostPopular(Integer count) {
-        log.info("generating list of popular films.");
-        return getAll().stream()
-                .sorted(Comparator.comparing(Film::getLikesCount).reversed())
+        return filmStorage.getAll().stream()
+                .filter(film -> film.getRate() > 0)
+                .filter(film -> film.getLikes().size() > 0)
+                .sorted((f1, f2) -> f2.getRate() - f1.getRate())
                 .limit(count)
                 .collect(Collectors.toList());
     }
